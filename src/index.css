@@ -1,0 +1,136 @@
+@import "tailwindcss";
+
+/* Dark mode is an explicit toggle (see hooks/use-theme.ts), not the OS preference. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Palette lifted from sqli.com/int-en: cream background, deep navy ink, vivid blue accent. */
+:root {
+  --background: #fffaf0;
+  --foreground: #0f0e2b;
+
+  --card: #fff6e6;
+  --card-foreground: #0f0e2b;
+
+  --popover: #fff6e6;
+  --popover-foreground: #0f0e2b;
+
+  --primary: #1f24e9;
+  --primary-foreground: #ffffff;
+
+  --secondary: #f0ead9;
+  --secondary-foreground: #0f0e2b;
+
+  --muted: #efe9da;
+  --muted-foreground: #726f68;
+
+  --accent: #e6e0cf;
+  --accent-foreground: #0f0e2b;
+
+  --destructive: #d64545;
+  --destructive-foreground: #ffffff;
+
+  --border: #d1cdc5;
+  --input: #d1cdc5;
+  --ring: #1f24e9;
+
+  --sidebar: #f5ecd7;
+  --sidebar-foreground: #0f0e2b;
+  --sidebar-primary: #1f24e9;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #e9dfc4;
+  --sidebar-accent-foreground: #0f0e2b;
+  --sidebar-border: #cec8b9;
+  --sidebar-ring: #1f24e9;
+}
+
+.dark {
+  --background: #0f0e2b;
+  --foreground: #fffaf0;
+
+  --card: #161533;
+  --card-foreground: #fffaf0;
+
+  --popover: #161533;
+  --popover-foreground: #fffaf0;
+
+  --primary: #4850ff;
+  --primary-foreground: #ffffff;
+
+  --secondary: #1d1c42;
+  --secondary-foreground: #fffaf0;
+
+  --muted: #1d1c42;
+  --muted-foreground: #a3a09a;
+
+  --accent: #23224c;
+  --accent-foreground: #fffaf0;
+
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+
+  --border: #2a2953;
+  --input: #2a2953;
+  --ring: #4850ff;
+
+  --sidebar: #1c1b45;
+  --sidebar-foreground: #fffaf0;
+  --sidebar-primary: #4850ff;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #29285a;
+  --sidebar-accent-foreground: #fffaf0;
+  --sidebar-border: #34336a;
+  --sidebar-ring: #4850ff;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
+@keyframes arrow-wave {
+  0%, 100% { opacity: 0.2; transform: translateX(0); }
+  50% { opacity: 1; transform: translateX(4px); }
+}
+
+.animate-arrow-1 { animation: arrow-wave 1.5s infinite ease-in-out; }
+.animate-arrow-2 { animation: arrow-wave 1.5s infinite ease-in-out 0.2s; }
+.animate-arrow-3 { animation: arrow-wave 1.5s infinite ease-in-out 0.4s; }
