@@ -36,6 +36,7 @@ export function UpdateEmployeeModal({
           phoneNumber: data.phoneNumber || null,
           jobTitle: data.jobTitle || null,
           hireDate: data.hireDate || null,
+          cnssNumber: data.cnssNumber || null,
         },
       }).unwrap();
 
@@ -66,6 +67,7 @@ export function UpdateEmployeeModal({
             phoneNumber: editingEmployee.phoneNumber ?? "",
             jobTitle: editingEmployee.jobTitle ?? "",
             hireDate: editingEmployee.hireDate ?? "",
+            cnssNumber: editingEmployee.cnssNumber ?? "",
           }}
           onSubmit={handleSubmit}
           onCancel={handleClose}

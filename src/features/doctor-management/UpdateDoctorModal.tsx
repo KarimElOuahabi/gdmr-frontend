@@ -36,6 +36,7 @@ export function UpdateDoctorModal({
           qualifications: data.qualifications,
           yearsOfExperience: data.yearsOfExperience,
           workSite: data.workSite,
+          cnssNumber: data.cnssNumber,
         },
       }).unwrap();
 
@@ -66,6 +67,7 @@ export function UpdateDoctorModal({
             qualifications: editingDoctor.qualifications,
             yearsOfExperience: editingDoctor.yearsOfExperience,
             workSite: editingDoctor.workSite,
+            cnssNumber: editingDoctor.cnssNumber ?? "",
           }}
           onSubmit={handleSubmit}
           onCancel={handleClose}
