@@ -4,14 +4,7 @@ import {
   selectIsAuthenticated,
   selectRole,
 } from "../../features/auth/authSlice";
-import { type Role } from "@/types/role";
-
-const roleHomePageMap: Record<Role, string> = {
-  ADMIN: "/admin_dashboard",
-  HR: "/hr_dashboard",
-  DOCTOR: "/doctor_dashboard",
-  EMPLOYEE: "/employee_dashboard",
-};
+import { roleHomePageMap } from "@/lib/roleHomePageMap";
 
 export function UnauthenticatedLayout() {
   const isAuthenticated = useAppSelector(selectIsAuthenticated);

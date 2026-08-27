@@ -40,6 +40,7 @@ import { RequireRole } from "@/features/auth/components/require-role";
 // --- PUBLIC & ERROR PAGES ---
 import { LoginPage } from "../pages/LoginPage";
 import { NotFound } from "../pages/errors/NotFound";
+import { Forbidden } from "../pages/errors/Forbidden";
 
 // --- ADMIN PAGES ---
 import { AdminDashboard } from "@/pages/admin/AdminDashboard";
@@ -588,5 +589,6 @@ export const authenticatedRoutes: RouteObject[] = [
 
 // --- FALLBACK ROUTES ---
 export const fallbackRoutes: RouteObject[] = [
+  { path: "/unauthorized", element: <Forbidden /> },
   { path: "*", element: <NotFound /> },
 ];
