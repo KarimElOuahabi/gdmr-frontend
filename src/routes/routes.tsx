@@ -2,6 +2,7 @@
 // 1. EXTERNAL DEPENDENCIES & ICONS
 // ============================================================================
 import type { RouteObject } from "react-router";
+import { Navigate } from "react-router-dom";
 import {
   Users,
   UserCog,
@@ -460,7 +461,10 @@ export function getProfilePopoverRoutes(role: Role | undefined): RouteItem[] {
 export const unauthenticatedRoutes: RouteObject[] = [
   {
     element: <UnauthenticatedLayout />,
-    children: [{ path: ROUTES.LOGIN.path, element: <LoginPage /> }],
+    children: [
+      { path: ROUTES.LOGIN.path, element: <LoginPage /> },
+      { path: "/", element: <Navigate to={ROUTES.LOGIN.path} replace /> },
+    ],
   },
 ];
 
