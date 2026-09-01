@@ -82,6 +82,7 @@ import { DoctorsList } from "@/pages/doctor-management/DoctorsList";
 import { DoctorDetailPage } from "@/pages/doctor-management/DoctorDetailPage";
 import { DoctorDetailByUserPage } from "@/pages/doctor-management/DoctorDetailByUserPage";
 import { VisitsPage } from "@/pages/admin/VisitsPage";
+import { VisitDetailPage } from "@/pages/admin/VisitDetailPage";
 import { Appointments } from "@/pages/employee/Appointments";
 import { DocumentsPage } from "@/pages/employee/DocumentsPage";
 
@@ -335,6 +336,12 @@ export const ROUTES = {
     roles: ["ADMIN", "HR"],
     group: "Visits",
   },
+  VISIT_DETAIL: {
+    key: "VISIT_DETAIL",
+    label: "Visit Detail",
+    path: "/visits/:visitId",
+    roles: ["ADMIN", "HR"],
+  },
   EMPLOYEE_DETAIL: {
     key: "EMPLOYEE_DETAIL",
     label: "Employee Detail",
@@ -569,6 +576,7 @@ export const authenticatedRoutes: RouteObject[] = [
             element: <DoctorDetailByUserPage />,
           },
           { path: ROUTES.VISITS.path, element: <VisitsPage /> },
+          { path: ROUTES.VISIT_DETAIL.path, element: <VisitDetailPage /> },
           { path: ROUTES.MY_PROFILE.path, element: <MyProfilePage /> },
           { path: ROUTES.HRS.path, element: <HrsPage /> },
           { path: ROUTES.STAFF_DETAIL.path, element: <StaffDetailPage /> },

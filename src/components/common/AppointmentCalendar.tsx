@@ -1,8 +1,7 @@
 import { useMemo, useState } from "react";
-import { ChevronLeft, ChevronRight, CalendarX2 } from "lucide-react";
+import { ChevronLeft, ChevronRight, CalendarX2, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
 import { VisitCard } from "@/components/common/VisitCard";
 import type { VisitResponse } from "@/features/visit/visitApi";
 
@@ -71,6 +70,8 @@ interface AppointmentCalendarProps {
   /** "employee" shows the doctor's info on selected-day cards; "staff" shows both. */
   perspective?: "employee" | "staff";
   title?: string;
+  /** When provided, clicking a visit card in the side agenda opens its details. */
+  onVisitClick?: (visit: VisitResponse) => void;
 }
 
 export function AppointmentCalendar({
@@ -78,6 +79,7 @@ export function AppointmentCalendar({
   isLoading = false,
   perspective = "employee",
   title = "My Calendar",
+  onVisitClick,
 }: AppointmentCalendarProps) {
   const today = useMemo(() => new Date(), []);
   const [monthAnchor, setMonthAnchor] = useState(() => startOfMonth(today));
@@ -117,7 +119,7 @@ export function AppointmentCalendar({
     : [];
 
   return (
-    <Card className="flex flex-1 flex-col lg:min-h-[calc(100vh-19rem)]">
+    <Card className="mx-auto flex w-full max-w-6xl flex-1 flex-col lg:min-h-[calc(100vh-19rem)]">
       <CardHeader>
         <div className="flex flex-wrap items-center justify-between gap-3">
           <CardTitle className="text-lg">{title}</CardTitle>
@@ -152,7 +154,10 @@ export function AppointmentCalendar({
 
       <CardContent className="flex flex-1 flex-col">
         {isLoading ? (
-          <Skeleton className="h-full min-h-[28rem] w-full" />
+          <div className="flex flex-1 flex-col items-center justify-center gap-3 min-h-[28rem] text-muted-foreground">
+            <Loader2 className="size-7 animate-spin text-primary" />
+            <p className="text-sm">Loading visits…</p>
+          </div>
         ) : (
           <div className="flex flex-1 flex-col gap-6 lg:flex-row">
             {/* Month grid — the dominant element */}
@@ -237,7 +242,7 @@ export function AppointmentCalendar({
                   : "Select a day"}
               </p>
 
-              <div className="flex-1 space-y-3 lg:max-h-[calc(100vh-24rem)] lg:overflow-y-auto lg:pr-1">
+              <div className="flex-1 space-y-3 px-0.5 py-1 lg:max-h-[calc(100vh-20rem)] lg:overflow-y-auto lg:px-1">
                 {selectedDayVisits.length === 0 ? (
                   <div className="flex flex-col items-center gap-2 rounded-xl border border-dashed py-10 text-center">
                     <CalendarX2 className="size-6 text-muted-foreground" />
@@ -247,7 +252,12 @@ export function AppointmentCalendar({
                   </div>
                 ) : (
                   selectedDayVisits.map((visit) => (
-                    <VisitCard key={visit.id} visit={visit} perspective={perspective} />
+                    <VisitCard
+                      key={visit.id}
+                      visit={visit}
+                      perspective={perspective}
+                      onClick={onVisitClick}
+                    />
                   ))
                 )}
               </div>

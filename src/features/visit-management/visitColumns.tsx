@@ -1,5 +1,7 @@
 import { type ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Eye } from "lucide-react";
 import type { VisitResponse } from "@/features/visit/visitApi";
 
 const statusVariant: Record<string, "default" | "outline" | "destructive"> = {
@@ -9,7 +11,9 @@ const statusVariant: Record<string, "default" | "outline" | "destructive"> = {
   ABSENT: "destructive",
 };
 
-export function buildVisitColumns(): ColumnDef<VisitResponse>[] {
+export function buildVisitColumns(
+  onView: (visit: VisitResponse) => void,
+): ColumnDef<VisitResponse>[] {
   return [
     {
       accessorKey: "confirmedDateTime",
@@ -43,9 +47,21 @@ export function buildVisitColumns(): ColumnDef<VisitResponse>[] {
       ),
     },
     {
-      accessorKey: "motif",
-      header: "Reason",
-      cell: ({ row }) => row.original.motif ?? "—",
+      id: "view",
+      header: () => <div className="text-center">Details</div>,
+      cell: ({ row }) => (
+        <div className="flex items-center justify-center">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8 text-slate-500 hover:text-slate-900 dark:hover:text-slate-100"
+            onClick={() => onView(row.original)}
+            title="View visit details"
+          >
+            <Eye className="h-4 w-4" />
+          </Button>
+        </div>
+      ),
     },
   ];
 }

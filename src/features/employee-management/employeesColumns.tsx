@@ -39,6 +39,15 @@ export function buildEmployeeColumns({
       ),
     },
     {
+      accessorKey: "id",
+      header: "User ID",
+      cell: ({ row }) => (
+        <span className="text-sm text-slate-500 dark:text-slate-400">
+          {row.original.id}
+        </span>
+      ),
+    },
+    {
       id: "fullName",
       header: "Employee",
       cell: ({ row }) => (
@@ -63,19 +72,19 @@ export function buildEmployeeColumns({
     },
     {
       accessorKey: "active",
-      header: "Status",
+      header: "Account Status",
       cell: ({ row }) =>
         row.original.active ? (
           <Badge
             variant="outline"
-            className="bg-green-50 text-green-700 border-green-200 dark:bg-green-950 dark:text-green-300"
+            className="border-transparent bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-300"
           >
             Active
           </Badge>
         ) : (
           <Badge
             variant="outline"
-            className="bg-slate-100 text-slate-600 border-slate-200 dark:bg-slate-900 dark:text-slate-400"
+            className="border-transparent bg-slate-100 text-slate-600 dark:bg-slate-900 dark:text-slate-400"
           >
             Inactive
           </Badge>

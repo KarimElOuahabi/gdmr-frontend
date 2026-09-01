@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import {
   Select,
   SelectContent,
@@ -22,6 +22,7 @@ export function VisitsPage() {
   // Dashboards deep-link here with ?status=... to land already filtered
   // (e.g. "No-shows this month" from the HR dashboard).
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const [page, setPage] = useState(0);
   const [status, setStatus] = useState<VisitStatus | undefined>(() =>
     readInitialStatus(searchParams.get("status")),
@@ -33,7 +34,7 @@ export function VisitsPage() {
     status,
   });
 
-  const columns = buildVisitColumns();
+  const columns = buildVisitColumns((visit) => navigate(`/visits/${visit.id}`));
 
   return (
     <div className="space-y-4">

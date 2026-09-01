@@ -115,6 +115,13 @@ export const adminUsersApi = createApi({
         { type: "User", id: "LIST" },
       ],
     }),
+    // Hard delete — removes the user and every trace of them (auth records, profile,
+    // notifications). Fails with a 409 if the user already has real history (visits, etc.)
+    // that references them; deactivate should be used for those instead.
+    deleteUser: builder.mutation<void, { id: number }>({
+      query: ({ id }) => ({ url: `/admin/users/${id}`, method: "DELETE" }),
+      invalidatesTags: [{ type: "User", id: "LIST" }],
+    }),
   }),
 });
 
@@ -123,4 +130,5 @@ export const {
   useCreateUserMutation,
   useUpdateUserMutation,
   useChangeUserStatusMutation,
+  useDeleteUserMutation,
 } = adminUsersApi;

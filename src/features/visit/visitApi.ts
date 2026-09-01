@@ -40,6 +40,11 @@ export const visitApi = createApi({
   baseQuery: baseQueryWithReauth,
   tagTypes: ["visit", "negotiationHistory"],
   endpoints: (builder) => ({
+    getVisit: builder.query<VisitResponse, number>({
+      query: (id) => ({ url: `/visits/${id}` }),
+      providesTags: (_r, _e, id) => [{ type: "visit" as const, id }],
+    }),
+
     listVisits: builder.query<PagedResponse<VisitResponse>, ListVisitsParams>({
       query: (params) => ({ url: "/visits", params }),
       providesTags: (result) =>
@@ -188,6 +193,7 @@ export const visitApi = createApi({
 });
 
 export const {
+  useGetVisitQuery,
   useListVisitsQuery,
   useListNegotiationHistoryQuery,
   useRequestSpontaneousVisitMutation,

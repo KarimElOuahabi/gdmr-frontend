@@ -126,11 +126,3 @@ body {
   color: var(--foreground);
 }
 
-@keyframes arrow-wave {
-  0%, 100% { opacity: 0.2; transform: translateX(0); }
-  50% { opacity: 1; transform: translateX(4px); }
-}
-
-.animate-arrow-1 { animation: arrow-wave 1.5s infinite ease-in-out; }
-.animate-arrow-2 { animation: arrow-wave 1.5s infinite ease-in-out 0.2s; }
-.animate-arrow-3 { animation: arrow-wave 1.5s infinite ease-in-out 0.4s; }

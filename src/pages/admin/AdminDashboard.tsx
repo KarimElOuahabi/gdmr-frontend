@@ -175,6 +175,7 @@ export function AdminDashboard() {
         isLoading={isLoadingVisits}
         perspective="staff"
         title="All Visits"
+        onVisitClick={(visit) => navigate(`/visits/${visit.id}`)}
       />
     </div>
   );

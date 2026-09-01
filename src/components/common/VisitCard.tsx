@@ -49,6 +49,8 @@ interface VisitCardProps {
   footer?: ReactNode;
   /** Small helper text shown next to the footer actions. */
   footerNote?: string;
+  /** When provided, the whole card becomes clickable (e.g. to open visit details). */
+  onClick?: (visit: VisitResponse) => void;
 }
 
 export function VisitCard({
@@ -58,6 +60,7 @@ export function VisitCard({
   extraRows = [],
   footer,
   footerNote,
+  onClick,
 }: VisitCardProps) {
   const { data: doctorsData, isLoading: isDoctorLoading } = useListDoctorsQuery(
     { page: 0, size: 100 },
@@ -151,20 +154,38 @@ export function VisitCard({
   return (
     <Card
       ref={cardRef}
+      role={onClick ? "button" : undefined}
+      tabIndex={onClick ? 0 : undefined}
+      onClick={onClick ? () => onClick(visit) : undefined}
+      onKeyDown={
+        onClick
+          ? (e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                onClick(visit);
+              }
+            }
+          : undefined
+      }
       className={`overflow-hidden pb-0 transition-all duration-700 ${
+        onClick
+          ? "cursor-pointer hover:-translate-y-0.5 hover:shadow-md hover:ring-1 hover:ring-primary/40"
+          : ""
+      } ${
         glow
           ? "scale-[1.02] ring-2 ring-primary shadow-lg shadow-primary/30 -translate-y-0.5"
           : ""
       }`}
     >
       <CardHeader>
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <CardTitle>{title}</CardTitle>
+        <div className="flex flex-wrap items-start justify-between gap-x-4 gap-y-2">
+          <div className="min-w-0">
+            <CardTitle className="break-words">{title}</CardTitle>
             <CardDescription className="mt-1">
               Visit details for the appointment.
             </CardDescription>
           </div>
+          <div className="shrink-0">
           {badge ?? (
             <Badge
               variant="outline"
@@ -173,6 +194,7 @@ export function VisitCard({
               {formatStatusLabel(visit.status)}
             </Badge>
           )}
+          </div>
         </div>
       </CardHeader>
 

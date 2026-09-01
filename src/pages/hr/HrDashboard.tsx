@@ -99,6 +99,7 @@ export function HrDashboard() {
         isLoading={isLoading}
         perspective="staff"
         title="All Visits"
+        onVisitClick={(visit) => navigate(`/visits/${visit.id}`)}
       />
     </div>
   );

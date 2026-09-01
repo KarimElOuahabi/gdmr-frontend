@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { DataTable } from "@/components/common/data-table";
 import { buildUserColumns } from "@/features/admin/usersColumns";
 import { EditUserModal } from "@/features/admin/EditUserModal";
+import { UpdateStaffModal } from "@/features/staff/UpdateStaffModal";
 import {
   useListUsersQuery,
   useChangeUserStatusMutation,
@@ -26,6 +27,10 @@ export function RoleUsersPage({ role, title }: RoleUsersPageProps) {
   const [search, setSearch] = useState("");
   const [editFormOpen, setEditFormOpen] = useState(false);
   const [editingUser, setEditingUser] = useState<UserResponse | null>(null);
+  const [staffEditOpen, setStaffEditOpen] = useState(false);
+  const [editingStaffUserId, setEditingStaffUserId] = useState<number | null>(
+    null,
+  );
 
   const { data, isLoading } = useListUsersQuery({
     role,
@@ -61,11 +66,18 @@ export function RoleUsersPage({ role, title }: RoleUsersPageProps) {
       setEditFormOpen(true);
     },
     onToggleStatus: handleToggleStatus,
+    onDelete: () => {},
     onViewProfile: (user) => {
       navigate(buildUserProfilePath(user.role, user.id));
     },
+    onEditProfile: (user) => {
+      setEditingStaffUserId(user.id);
+      setStaffEditOpen(true);
+    },
     showRole: false,
     showAvatar: true,
+    showActions: false,
+    showEditProfile: true,
     currentUserId: currentUser?.id,
   });
 
@@ -98,6 +110,12 @@ export function RoleUsersPage({ role, title }: RoleUsersPageProps) {
         open={editFormOpen}
         onOpenChange={setEditFormOpen}
         editingUser={editingUser}
+      />
+
+      <UpdateStaffModal
+        open={staffEditOpen}
+        onOpenChange={setStaffEditOpen}
+        editingUserId={editingStaffUserId}
       />
     </div>
   );

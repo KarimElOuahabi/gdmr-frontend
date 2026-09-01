@@ -4,7 +4,7 @@ import {
   CardContent,
 } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { AnimatedArrows } from "@/components/common/AnimatedArrows";
+import { ConnectorLine } from "@/components/common/ConnectorLine";
 
 interface AppointmentRequestHeaderProps {
   doctorName?: string;
@@ -21,16 +21,16 @@ export function AppointmentRequestHeader({
 
       <CardContent className="flex items-center justify-center p-8 gap-16">
         <div className="flex flex-col items-center gap-2">
-          <Avatar className="h-28 w-28 ring-4">
+          <Avatar className="h-28 w-28">
             <AvatarFallback className="text-2xl font-bold">EMP</AvatarFallback>
           </Avatar>
           <span className="text-sm font-medium text-muted-foreground">You</span>
         </div>
 
-        <AnimatedArrows size={12} />
+        <ConnectorLine />
 
         <div className="flex flex-col items-center gap-2">
-          <Avatar className="h-28 w-28 ring-4">
+          <Avatar className="h-28 w-28">
             <AvatarFallback className="text-2xl font-bold">DR</AvatarFallback>
           </Avatar>
           <span className="text-sm font-medium text-muted-foreground">
