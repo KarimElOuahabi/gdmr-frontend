@@ -21,8 +21,9 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { toast } from "@/components/ui/toast";
-import { CheckCircle2, CalendarClock } from "lucide-react";
+import { CheckCircle2, CalendarClock, Inbox } from "lucide-react";
 import type { VisitResponse } from "@/features/visit/visitApi";
+import { EmptyState } from "@/components/common/EmptyState";
 
 export function ProposedVisits() {
   const { data, isLoading } = useListVisitsQuery({ page: 0, size: 50 });
@@ -98,9 +99,11 @@ export function ProposedVisits() {
             <Skeleton className="h-48 w-full" />
           </>
         ) : proposedVisits.length === 0 ? (
-          <p className="text-muted-foreground">
-            No proposed visits at the moment.
-          </p>
+          <EmptyState
+            icon={Inbox}
+            title="No proposed visits"
+            description="Slots your doctor proposes will show up here for you to confirm."
+          />
         ) : (
           proposedVisits.map((visit) => (
             <VisitCard

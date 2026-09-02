@@ -1,5 +1,6 @@
-import { useNavigate, useParams } from "react-router-dom";
-import { ArrowLeft } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { ArrowLeft, CalendarClock } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -61,6 +62,29 @@ export function VisitDetailPage() {
   const isLoading =
     isVisitLoading || isDoctorsLoading || isEmployeesLoading || !visit;
 
+  // A notification click can deep-link here with ?highlight=<visitId> — glow
+  // once then fade, matching VisitCard's behavior on list pages.
+  const [searchParams, setSearchParams] = useSearchParams();
+  const isHighlighted = searchParams.get("highlight") === String(id);
+  const [glow, setGlow] = useState(isHighlighted);
+
+  useEffect(() => {
+    if (!isHighlighted) return;
+    const timeout = setTimeout(() => {
+      setGlow(false);
+      setSearchParams(
+        (prev) => {
+          const next = new URLSearchParams(prev);
+          next.delete("highlight");
+          return next;
+        },
+        { replace: true },
+      );
+    }, 2500);
+    return () => clearTimeout(timeout);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isHighlighted]);
+
   return (
     <div className="space-y-6">
       <Button
@@ -80,45 +104,51 @@ export function VisitDetailPage() {
         </div>
       ) : (
         <>
-          <Card className="mx-auto w-full max-w-3xl overflow-hidden shadow-lg">
+          <Card
+            className={`mx-auto w-full max-w-3xl overflow-hidden shadow-lg transition-all duration-700 ${
+              glow
+                ? "scale-[1.01] ring-2 ring-primary shadow-lg shadow-primary/30"
+                : ""
+            }`}
+          >
             <CardHeader className="pb-2 text-center">
               <CardTitle className="text-xl">Visit #{visit.id}</CardTitle>
             </CardHeader>
-            <CardContent className="flex items-center justify-center gap-16 p-8">
-              <div className="flex flex-col items-center gap-2">
+            <CardContent className="flex items-center justify-center gap-4 p-4 sm:gap-16 sm:p-8">
+              <div className="flex min-w-0 flex-col items-center gap-2">
                 <UserAvatar
                   userId={employee?.id}
                   role="EMPLOYEE"
                   firstName={employee?.firstName ?? ""}
                   lastName={employee?.lastName ?? ""}
-                  className="h-28 w-28"
-                  iconClassName="h-10 w-10"
+                  className="h-16 w-16 sm:h-28 sm:w-28"
+                  iconClassName="h-6 w-6 sm:h-10 sm:w-10"
                 />
-                <span className="text-sm font-medium">
+                <span className="max-w-24 truncate text-sm font-medium sm:max-w-none">
                   {employee
                     ? `${employee.firstName} ${employee.lastName}`
                     : `Employee #${visit.employeeId}`}
                 </span>
-                <span className="text-xs text-muted-foreground">
+                <span className="max-w-24 truncate text-xs text-muted-foreground sm:max-w-none">
                   {employee?.department ?? "Employee"}
                 </span>
               </div>
 
               <ConnectorLine />
 
-              <div className="flex flex-col items-center gap-2">
+              <div className="flex min-w-0 flex-col items-center gap-2">
                 <UserAvatar
                   userId={doctor?.userId}
                   role="DOCTOR"
                   firstName={doctor?.firstName ?? ""}
                   lastName={doctor?.lastName ?? ""}
-                  className="h-28 w-28"
-                  iconClassName="h-10 w-10"
+                  className="h-16 w-16 sm:h-28 sm:w-28"
+                  iconClassName="h-6 w-6 sm:h-10 sm:w-10"
                 />
-                <span className="text-sm font-medium">
+                <span className="max-w-24 truncate text-sm font-medium sm:max-w-none">
                   {doctor ? `Dr. ${doctor.firstName} ${doctor.lastName}` : `Doctor #${visit.doctorId}`}
                 </span>
-                <span className="text-xs text-muted-foreground">
+                <span className="max-w-24 truncate text-xs text-muted-foreground sm:max-w-none">
                   {doctor?.specialty ?? "Doctor"}
                 </span>
               </div>
@@ -143,7 +173,23 @@ export function VisitDetailPage() {
                   { label: "Type", value: visit.visitType },
                   {
                     label: "Date",
-                    value: formatDateTime(visit.confirmedDateTime) ?? "Pending",
+                    value: visit.confirmedDateTime ? (
+                      <Badge
+                        variant="outline"
+                        className="gap-1 border-transparent bg-emerald-500/10 font-normal text-emerald-600 dark:text-emerald-400"
+                      >
+                        <CalendarClock className="size-3" />
+                        {formatDateTime(visit.confirmedDateTime)}
+                      </Badge>
+                    ) : (
+                      <Badge
+                        variant="outline"
+                        className="gap-1 border-transparent bg-muted font-normal text-muted-foreground"
+                      >
+                        <CalendarClock className="size-3" />
+                        Pending
+                      </Badge>
+                    ),
                   },
                   { label: "Reason", value: visit.motif || "—" },
                   ...(visit.reportNotes
@@ -153,10 +199,24 @@ export function VisitDetailPage() {
                   visit.proposedSlotsByEmployee.length > 0
                     ? [
                         {
-                          label: "Suggested slots",
-                          value: visit.proposedSlotsByEmployee
-                            .map((slot) => formatDateTime(slot))
-                            .join(", "),
+                          label:
+                            visit.proposedSlotsByEmployee.length > 1
+                              ? "Suggested slots"
+                              : "Suggested slot",
+                          value: (
+                            <div className="flex flex-wrap justify-end gap-1.5">
+                              {visit.proposedSlotsByEmployee.map((slot) => (
+                                <Badge
+                                  key={slot}
+                                  variant="outline"
+                                  className="gap-1 border-transparent bg-sky-500/10 font-normal text-sky-600 dark:text-sky-400"
+                                >
+                                  <CalendarClock className="size-3" />
+                                  {formatDateTime(slot)}
+                                </Badge>
+                              ))}
+                            </div>
+                          ),
                         },
                       ]
                     : []),

@@ -1,5 +1,7 @@
 import type { DoctorProfileResponse } from "../doctor/doctorApi";
 import { DoctorItem } from "./DoctorItem";
+import { EmptyState } from "@/components/common/EmptyState";
+import { Stethoscope } from "lucide-react";
 
 interface SelectDoctorProps {
   doctors: DoctorProfileResponse[];
@@ -17,9 +19,11 @@ export function SelectDoctor({ doctors, onOpen }: SelectDoctorProps) {
       </div>
 
       {doctors.length === 0 ? (
-        <p className="text-muted-foreground">
-          No doctors available at the moment.
-        </p>
+        <EmptyState
+          icon={Stethoscope}
+          title="No doctors available"
+          description="Check back later — doctors will appear here once they're added."
+        />
       ) : (
         <div className="flex flex-col gap-4">
           {doctors.map((doctor) => (

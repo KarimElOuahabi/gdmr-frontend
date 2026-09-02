@@ -6,6 +6,7 @@ import type { PagedResponse } from "@/types/pagination";
 
 export interface ListDoctorsParams {
   search?: string;
+  idSearch?: string;
   page: number;
   size: number;
 }
@@ -44,9 +45,9 @@ export const doctorManagementApi = createApi({
       PagedResponse<DoctorProfileResponse>,
       ListDoctorsParams
     >({
-      query: ({ search, page = 0, size = 20 }) => ({
+      query: ({ search, idSearch, page = 0, size = 20 }) => ({
         url: "/doctors",
-        params: { search, page, size },
+        params: { search, idSearch, page, size },
       }),
       providesTags: (result) =>
         result

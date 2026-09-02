@@ -6,9 +6,9 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { DataTable } from "@/components/common/data-table";
-import { useListEmployeesQuery } from "@/features/employee-management/employeeManagementApi";
+import { useListMyPatientsQuery } from "@/features/employee-management/employeeManagementApi";
 import type { EmployeeProfileResponse } from "@/features/employee/employeeApi";
-import { Eye } from "lucide-react";
+import { Eye, History } from "lucide-react";
 
 const PAGE_SIZE = 10;
 
@@ -26,7 +26,7 @@ export function PatientsPage() {
   const [search, setSearch] = useState("");
   const navigate = useNavigate();
 
-  const { data, isLoading } = useListEmployeesQuery({
+  const { data, isLoading } = useListMyPatientsQuery({
     page,
     size: PAGE_SIZE,
     search: search || undefined,
@@ -105,6 +105,25 @@ export function PatientsPage() {
             title="View Profile"
           >
             <Eye className="h-4 w-4" />
+          </Button>
+        </div>
+      ),
+    },
+    {
+      id: "medicalHistory",
+      header: () => <div className="text-center">Medical History</div>,
+      cell: ({ row }) => (
+        <div className="flex items-center justify-center">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8 text-slate-500 hover:text-slate-900 dark:hover:text-slate-100"
+            onClick={() =>
+              navigate(`/doctor/patients/${row.original.employeeId}/history`)
+            }
+            title="Medical History"
+          >
+            <History className="h-4 w-4" />
           </Button>
         </div>
       ),

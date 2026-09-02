@@ -217,7 +217,11 @@ export function SlotPicker({
                 <li key={slot.id}>
                   <button
                     type="button"
-                    onClick={() => setSelectedSlotId(slot.id)}
+                    onClick={() =>
+                      setSelectedSlotId((prev) =>
+                        prev === slot.id ? null : slot.id,
+                      )
+                    }
                     className={`flex w-full items-center gap-2 rounded-lg border p-3 text-left text-sm transition-colors hover:bg-muted/40 ${
                       selectedSlotId === slot.id
                         ? "border-primary bg-primary/5"

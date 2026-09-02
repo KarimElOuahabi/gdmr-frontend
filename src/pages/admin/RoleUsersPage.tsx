@@ -77,7 +77,9 @@ export function RoleUsersPage({ role, title }: RoleUsersPageProps) {
     showRole: false,
     showAvatar: true,
     showActions: false,
-    showEditProfile: true,
+    // HR can view other HR/Admin users here but must not edit them — only an
+    // Admin viewing this same table gets the edit-profile pencil.
+    showEditProfile: currentUser?.role !== "HR",
     currentUserId: currentUser?.id,
   });
 

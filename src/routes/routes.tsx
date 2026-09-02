@@ -65,6 +65,7 @@ import { VisitsInProgressPage } from "@/pages/doctor/VisitsInProgressPage";
 import { CompletedVisitsPage } from "@/pages/doctor/CompletedVisitsPage";
 import { PatientsPage } from "@/pages/doctor/PatientsPage";
 import { PatientDetailPage } from "@/pages/doctor/PatientDetailPage";
+import { PatientHistoryPage } from "@/pages/doctor/PatientHistoryPage";
 import { DoctorProfilePage } from "@/pages/doctor/DoctorProfilePage";
 
 // --- EMPLOYEE PAGES ---
@@ -249,6 +250,12 @@ export const ROUTES = {
     key: "DOCTOR_PATIENT_DETAIL",
     label: "Patient Detail",
     path: "/doctor/patients/:employeeId",
+    roles: ["DOCTOR"],
+  },
+  DOCTOR_PATIENT_HISTORY: {
+    key: "DOCTOR_PATIENT_HISTORY",
+    label: "Medical History",
+    path: "/doctor/patients/:employeeId/history",
     roles: ["DOCTOR"],
   },
 
@@ -524,6 +531,10 @@ export const authenticatedRoutes: RouteObject[] = [
           {
             path: ROUTES.DOCTOR_PATIENT_DETAIL.path,
             element: <PatientDetailPage />,
+          },
+          {
+            path: ROUTES.DOCTOR_PATIENT_HISTORY.path,
+            element: <PatientHistoryPage />,
           },
           { path: ROUTES.DOCTOR_PROFILE.path, element: <DoctorProfilePage /> },
         ],

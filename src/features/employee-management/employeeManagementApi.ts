@@ -6,6 +6,7 @@ import type { PagedResponse } from "@/types/pagination";
 
 export interface ListEmployeesParams {
   search?: string;
+  idSearch?: string;
   page: number;
   size: number;
 }
@@ -44,9 +45,31 @@ export const employeeManagementApi = createApi({
       PagedResponse<EmployeeProfileResponse>,
       ListEmployeesParams
     >({
-      query: ({ search, page = 0, size = 20 }) => ({
+      query: ({ search, idSearch, page = 0, size = 20 }) => ({
         url: "/employees",
-        params: { search, page, size },
+        params: { search, idSearch, page, size },
+      }),
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.content.map((emp) => ({
+                type: "Employee" as const,
+                id: emp.id,
+              })),
+              { type: "Employee" as const, id: "LIST" },
+            ]
+          : [{ type: "Employee" as const, id: "LIST" }],
+    }),
+
+    // DOCTOR only — employees who have (or had) at least one visit with the
+    // logged-in doctor, any status. Backs the doctor's own Patients table.
+    listMyPatients: builder.query<
+      PagedResponse<EmployeeProfileResponse>,
+      ListEmployeesParams
+    >({
+      query: ({ search, idSearch, page = 0, size = 20 }) => ({
+        url: "/employees/my-patients",
+        params: { search, idSearch, page, size },
       }),
       providesTags: (result) =>
         result
@@ -93,6 +116,7 @@ export const employeeManagementApi = createApi({
 
 export const {
   useListEmployeesQuery,
+  useListMyPatientsQuery,
   useGetEmployeeProfileByIdQuery,
   useGetEmployeeProfileByUserIdQuery,
   useUpsertEmployeeMutation,

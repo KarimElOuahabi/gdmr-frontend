@@ -1,4 +1,5 @@
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { DataItem } from "@/components/common/ProfileData";
@@ -59,6 +60,29 @@ export function ProfileHeaderCard({
 
   const busy = isUploading || isDeleting;
 
+  // A notification click can deep-link to any profile page with ?highlight=1
+  // — glow this card once then fade, same behavior as VisitCard on list pages.
+  const [searchParams, setSearchParams] = useSearchParams();
+  const isHighlighted = searchParams.has("highlight");
+  const [glow, setGlow] = useState(isHighlighted);
+
+  useEffect(() => {
+    if (!isHighlighted) return;
+    const timeout = setTimeout(() => {
+      setGlow(false);
+      setSearchParams(
+        (prev) => {
+          const next = new URLSearchParams(prev);
+          next.delete("highlight");
+          return next;
+        },
+        { replace: true },
+      );
+    }, 2500);
+    return () => clearTimeout(timeout);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isHighlighted]);
+
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     e.target.value = "";
@@ -92,7 +116,13 @@ export function ProfileHeaderCard({
   };
 
   return (
-    <Card>
+    <Card
+      className={`transition-all duration-700 ${
+        glow
+          ? "scale-[1.01] ring-2 ring-primary shadow-lg shadow-primary/30"
+          : ""
+      }`}
+    >
       <CardContent className="flex flex-col gap-6 p-6 sm:flex-row sm:items-center">
         <div className="group/avatar-upload relative shrink-0 self-center sm:self-auto">
           <UserAvatar

@@ -4,9 +4,10 @@ import { useListVisitsQuery } from "@/features/visit/visitApi";
 import { VisitCard } from "@/components/common/VisitCard";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { CalendarClock, CalendarPlus } from "lucide-react";
+import { CalendarClock, CalendarPlus, Inbox } from "lucide-react";
 import { AssignTimeSlotDialog } from "@/features/visit/AssignTimeSlotDialog";
 import type { VisitResponse } from "@/features/visit/visitApi";
+import { EmptyState } from "@/components/common/EmptyState";
 
 export function VisitRequestsPage() {
   const { data: requested, isLoading } = useListVisitsQuery({
@@ -45,7 +46,11 @@ export function VisitRequestsPage() {
         {isLoading ? (
           <Skeleton className="h-48 w-full" />
         ) : requested?.content.length === 0 ? (
-          <p className="text-muted-foreground">No pending requests.</p>
+          <EmptyState
+            icon={Inbox}
+            title="No pending requests"
+            description="New spontaneous visit requests will show up here."
+          />
         ) : (
           <div className="flex flex-col gap-4">
             {requested?.content.map((v) => (

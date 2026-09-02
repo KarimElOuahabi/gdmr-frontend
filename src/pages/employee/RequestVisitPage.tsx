@@ -2,6 +2,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "@/components/ui/toast";
 import { useRequestSpontaneousVisitMutation } from "@/features/visit/visitApi";
 import { useListDoctorsQuery } from "@/features/doctor-management/doctorManagementApi";
+import { useGetEmployeeProfileQuery } from "@/features/employee/employeeApi";
 import { useUploadDocumentMutation } from "@/features/document/documentApi";
 import {
   AppointmentRequestForm,
@@ -19,9 +20,7 @@ export function RequestVisitPage() {
   const doctor = doctorsData?.content.find(
     (d) => d.userId === Number(doctorId),
   );
-  const doctorName = doctor
-    ? `${doctor.firstName} ${doctor.lastName}`
-    : undefined;
+  const { data: employeeProfile } = useGetEmployeeProfileQuery();
 
   const onSubmitRequest = async ({
     proposedSlots,
@@ -69,7 +68,14 @@ export function RequestVisitPage() {
 
   return (
     <div>
-      <AppointmentRequestHeader doctorName={doctorName} />
+      <AppointmentRequestHeader
+        employeeUserId={employeeProfile?.id}
+        employeeFirstName={employeeProfile?.firstName}
+        employeeLastName={employeeProfile?.lastName}
+        doctorUserId={doctor?.userId}
+        doctorFirstName={doctor?.firstName}
+        doctorLastName={doctor?.lastName}
+      />
       <AppointmentRequestForm
         onSubmitRequest={onSubmitRequest}
         isSubmitting={isLoading}

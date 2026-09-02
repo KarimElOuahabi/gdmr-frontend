@@ -2,6 +2,7 @@ import { useParams } from "react-router-dom";
 import { useGetEmployeeProfileByIdQuery } from "@/features/employee-management/employeeManagementApi";
 import { ProfileHeaderCard } from "@/components/common/ProfileHeaderCard";
 import { EmployeeProfileCard } from "@/features/employee-management/EmployeeProfileCard";
+import { EmployeeVisitHistoryCard } from "@/features/employee-management/EmployeeVisitHistoryCard";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export function EmployeeDetailPage() {
@@ -52,6 +53,8 @@ export function EmployeeDetailPage() {
       />
 
       <EmployeeProfileCard employee={employeeProfile} editable />
+
+      <EmployeeVisitHistoryCard employeeId={employeeProfile.employeeId} />
     </div>
   );
 }

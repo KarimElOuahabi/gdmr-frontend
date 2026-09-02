@@ -14,7 +14,9 @@ export function ProfileIssueResolverPage() {
 
   useEffect(() => {
     if (data) {
-      navigate(buildUserProfilePath(data.role, data.userId), { replace: true });
+      navigate(`${buildUserProfilePath(data.role, data.userId)}?highlight=1`, {
+        replace: true,
+      });
     } else if (isError) {
       navigate("/notifications", { replace: true });
     }

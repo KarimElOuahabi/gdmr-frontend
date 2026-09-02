@@ -9,6 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { CalendarClock } from "lucide-react";
 import { SeparatorList } from "@/components/common/separator-list";
 import { useListDoctorsQuery } from "@/features/doctor-management/doctorManagementApi";
 import { useListEmployeesQuery } from "@/features/employee-management/employeeManagementApi";
@@ -41,6 +42,8 @@ interface VisitCardProps {
   visit: VisitResponse;
   /** "employee" shows the doctor's info; "staff" (HR/doctor) shows both employee & doctor info. */
   perspective?: "employee" | "staff";
+  /** Hides the Doctor/Specialty rows — for a doctor viewing their own patient's history, where the doctor is always themselves. */
+  hideDoctorInfo?: boolean;
   /** Overrides the default status badge shown top-right. */
   badge?: ReactNode;
   /** Extra rows appended after the standard ones (e.g. report notes). */
@@ -56,6 +59,7 @@ interface VisitCardProps {
 export function VisitCard({
   visit,
   perspective = "employee",
+  hideDoctorInfo = false,
   badge,
   extraRows = [],
   footer,
@@ -64,6 +68,7 @@ export function VisitCard({
 }: VisitCardProps) {
   const { data: doctorsData, isLoading: isDoctorLoading } = useListDoctorsQuery(
     { page: 0, size: 100 },
+    { skip: hideDoctorInfo },
   );
   const { data: employeesData, isLoading: isEmployeeLoading } =
     useListEmployeesQuery(
@@ -114,40 +119,74 @@ export function VisitCard({
     });
   }
 
-  rows.push({
-    label: "Doctor",
-    value: isDoctorLoading
-      ? "Loading..."
-      : `Dr. ${doctor?.lastName ?? visit.doctorId}`,
-  });
-
-  if (perspective === "employee") {
+  if (!hideDoctorInfo) {
     rows.push({
-      label: "Specialty",
-      value: isDoctorLoading ? "..." : doctor?.specialty || "—",
+      label: "Doctor",
+      value: isDoctorLoading
+        ? "Loading..."
+        : `Dr. ${doctor?.lastName ?? visit.doctorId}`,
     });
+
+    if (perspective === "employee") {
+      rows.push({
+        label: "Specialty",
+        value: isDoctorLoading ? "..." : doctor?.specialty || "—",
+      });
+    }
   }
 
   rows.push({ label: "Motif", value: visit.motif || "—" });
 
   rows.push({
     label: "Date",
-    value: formatDateTime(visit.confirmedDateTime) ?? "Pending",
+    value: visit.confirmedDateTime ? (
+      <Badge
+        variant="outline"
+        className="gap-1 border-transparent bg-emerald-500/10 font-normal text-emerald-600 dark:text-emerald-400"
+      >
+        <CalendarClock className="size-3" />
+        {formatDateTime(visit.confirmedDateTime)}
+      </Badge>
+    ) : (
+      <Badge
+        variant="outline"
+        className="gap-1 border-transparent bg-muted font-normal text-muted-foreground"
+      >
+        <CalendarClock className="size-3" />
+        Pending
+      </Badge>
+    ),
   });
 
   if (!visit.confirmedDateTime && visit.proposedSlotsByEmployee.length > 0) {
     rows.push({
-      label: "Suggested slots",
-      value: visit.proposedSlotsByEmployee
-        .map((slot) => formatDateTime(slot))
-        .join(", "),
+      label:
+        visit.proposedSlotsByEmployee.length > 1
+          ? "Suggested slots"
+          : "Suggested slot",
+      value: (
+        <div className="flex flex-wrap justify-end gap-1.5">
+          {visit.proposedSlotsByEmployee.map((slot) => (
+            <Badge
+              key={slot}
+              variant="outline"
+              className="gap-1 border-transparent bg-sky-500/10 font-normal text-sky-600 dark:text-sky-400"
+            >
+              <CalendarClock className="size-3" />
+              {formatDateTime(slot)}
+            </Badge>
+          ))}
+        </div>
+      ),
     });
   }
 
   rows.push(...extraRows);
 
-  const title =
-    perspective === "staff"
+  const visitTypeLabel = visit.visitType.replace(/_/g, " ");
+  const title = hideDoctorInfo
+    ? `${visitTypeLabel} visit`
+    : perspective === "staff"
       ? `${employee ? `${employee.firstName} ${employee.lastName}` : `Employee #${visit.employeeId}`} — Dr. ${doctor?.lastName ?? visit.doctorId}`
       : `Appointment with Dr. ${doctor?.lastName ?? ""}`;
 

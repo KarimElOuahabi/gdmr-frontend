@@ -3,6 +3,7 @@ import { useGetEmployeeProfileByUserIdQuery } from "@/features/employee-manageme
 import { Skeleton } from "@/components/ui/skeleton";
 import { ProfileHeaderCard } from "@/components/common/ProfileHeaderCard";
 import { EmployeeProfileCard } from "@/features/employee-management/EmployeeProfileCard";
+import { EmployeeVisitHistoryCard } from "@/features/employee-management/EmployeeVisitHistoryCard";
 
 // Reached from the Users datatable, which only knows the User table id — unlike
 // EmployeeDetailPage (keyed by the Employee entity's own id from the Employees list).
@@ -54,6 +55,8 @@ export function EmployeeDetailByUserPage() {
       />
 
       <EmployeeProfileCard employee={employeeProfile} editable />
+
+      <EmployeeVisitHistoryCard employeeId={employeeProfile.employeeId} />
     </div>
   );
 }

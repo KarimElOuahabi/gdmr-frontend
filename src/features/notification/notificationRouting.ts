@@ -12,6 +12,13 @@ export function getNotificationTarget(
       : null;
   }
 
+  // Not visit-highlightable — a document can exist without a visitId (a
+  // self-uploaded certificate), so this is checked before the relatedVisitId
+  // guard below rather than falling into the generic visit routing.
+  if (n.type === "DOCUMENT_UPLOADED" && role === "EMPLOYEE") {
+    return "/employee/documents";
+  }
+
   if (!n.relatedVisitId) return null;
   const id = n.relatedVisitId;
 
@@ -25,11 +32,15 @@ export function getNotificationTarget(
         ? `/doctor/visit-requests?highlight=${id}`
         : `/doctor/upcoming-visits?highlight=${id}`;
     case "HR":
+      // These two land on a VisitCard list (glow works there); everything
+      // else goes straight to the single-visit detail page instead of the
+      // /visits datatable, which has no per-row highlight to glow — the
+      // detail page glows its own card instead.
       return n.type === "VISIT_REQUESTED" || n.type === "VISIT_REJECTED"
         ? `/hr/visit-requests?highlight=${id}`
-        : `/visits?highlight=${id}`;
+        : `/visits/${id}?highlight=${id}`;
     case "ADMIN":
-      return `/visits?highlight=${id}`;
+      return `/visits/${id}?highlight=${id}`;
     default:
       return null;
   }

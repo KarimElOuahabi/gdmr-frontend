@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/card";
 import { SeparatorList } from "@/components/common/separator-list";
 import { Button } from "@/components/ui/button";
-import { Eye } from "lucide-react";
+import { CheckCircle2 } from "lucide-react";
 import type { DoctorProfileResponse } from "../doctor/doctorApi";
 
 interface DoctorItemProps {
@@ -56,15 +56,15 @@ export function DoctorItem({ doctor, onOpen }: DoctorItemProps) {
       {onOpen && (
         <CardFooter className="flex flex-col items-stretch gap-3 border-t bg-muted/30 px-6 pb-3 pt-4 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-xs text-muted-foreground">
-            View more informations about this doctor.
+            Select this doctor to request an appointment.
           </p>
           <Button
             size="sm"
             className="w-full gap-2 sm:w-auto"
             onClick={() => onOpen(doctor)}
           >
-            <Eye className="size-4" />
-            View
+            <CheckCircle2 className="size-4" />
+            Select
           </Button>
         </CardFooter>
       )}

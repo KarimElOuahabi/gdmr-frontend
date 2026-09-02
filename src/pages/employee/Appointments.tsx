@@ -10,6 +10,8 @@ import { useListVisitsQuery } from "@/features/visit/visitApi";
 import { ALL_VISIT_STATUSES } from "@/types/visit";
 import { VisitCard } from "@/components/common/VisitCard";
 import { Skeleton } from "@/components/ui/skeleton";
+import { EmptyState } from "@/components/common/EmptyState";
+import { CalendarClock } from "lucide-react";
 
 export function Appointments() {
   const { data, isLoading } = useListVisitsQuery({ page: 0, size: 50 });
@@ -66,9 +68,11 @@ export function Appointments() {
             <Skeleton className="h-48 w-full" />
           </>
         ) : filteredVisits.length === 0 ? (
-          <p className="text-muted-foreground">
-            No visits found for this status.
-          </p>
+          <EmptyState
+            icon={CalendarClock}
+            title="No visits found"
+            description="No visits match this status filter."
+          />
         ) : (
           filteredVisits.map((visit) => (
             <VisitCard key={visit.id} visit={visit} />
