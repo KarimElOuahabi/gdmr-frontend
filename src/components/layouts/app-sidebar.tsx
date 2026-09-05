@@ -1,4 +1,4 @@
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { LogOut, Moon } from "lucide-react";
 
 import {
@@ -29,13 +29,18 @@ import { useTheme } from "@/hooks/use-theme";
 export function AppSidebar() {
   const { data: currentUser } = useGetCurrentUserQuery();
   const [logout] = useLogoutMutation();
-  const navigate = useNavigate();
   const { pathname } = useLocation();
   const { theme, toggleTheme } = useTheme();
   const { isMobile, setOpenMobile } = useSidebar();
   const handleLogout = async () => {
     await logout();
-    navigate("/login", { replace: true });
+    // Hard navigation, not react-router's navigate(): every RTK Query api
+    // slice (doctorApi, employeeManagementApi, visitApi, ...) keeps its own
+    // cache independent of authApi's, and queries with no per-user argument
+    // (e.g. getDoctorProfile) would otherwise keep serving the previous
+    // account's cached response to the next login in the same tab. A full
+    // reload guarantees a completely fresh Redux store.
+    window.location.href = "/login";
   };
   const closeOnMobile = () => {
     if (isMobile) setOpenMobile(false);
