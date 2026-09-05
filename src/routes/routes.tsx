@@ -141,7 +141,7 @@ export const ROUTES = {
   },
   HRS: {
     key: "HRS",
-    label: "HR",
+    label: "HRs",
     path: "/hrs",
     icon: Briefcase,
     roles: ["ADMIN", "HR"],

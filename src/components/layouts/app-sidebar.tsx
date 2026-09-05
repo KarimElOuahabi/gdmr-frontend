@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { LogOut, Moon } from "lucide-react";
 
 import {
@@ -30,6 +30,7 @@ export function AppSidebar() {
   const { data: currentUser } = useGetCurrentUserQuery();
   const [logout] = useLogoutMutation();
   const navigate = useNavigate();
+  const { pathname } = useLocation();
   const { theme, toggleTheme } = useTheme();
   const { isMobile, setOpenMobile } = useSidebar();
   const handleLogout = async () => {
@@ -79,19 +80,26 @@ export function AppSidebar() {
             <SidebarGroupLabel>{group.label}</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu className="gap-0.5 rounded-lg bg-sidebar-accent/60 p-0.5 group-data-[collapsible=icon]:bg-transparent group-data-[collapsible=icon]:p-0">
-                {group.routes.map((route) => (
-                  <SidebarMenuItem key={route.key}>
-                    <SidebarMenuButton
-                      tooltip={route.label}
-                      render={
-                        <Link to={route.path} onClick={closeOnMobile}>
-                          {route.icon && <route.icon className="size-4" />}
-                          <span>{route.label}</span>
-                        </Link>
-                      }
-                    />
-                  </SidebarMenuItem>
-                ))}
+                {group.routes.map((route) => {
+                  const isActive =
+                    pathname === route.path ||
+                    pathname.startsWith(`${route.path}/`);
+                  return (
+                    <SidebarMenuItem key={route.key}>
+                      <SidebarMenuButton
+                        tooltip={route.label}
+                        isActive={isActive}
+                        className="data-active:bg-black/15 dark:data-active:bg-black/30"
+                        render={
+                          <Link to={route.path} onClick={closeOnMobile}>
+                            {route.icon && <route.icon className="size-4" />}
+                            <span>{route.label}</span>
+                          </Link>
+                        }
+                      />
+                    </SidebarMenuItem>
+                  );
+                })}
                 {group.label === "General" && (
                   <SidebarMenuItem>
                     <SidebarMenuButton
